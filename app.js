@@ -103,20 +103,26 @@
     var act = S.isAdmin
       ? '<button class="link" data-act="edit" data-id="' + esc(m.id) + '"' + (h.known && a.known ? "" : " disabled") + ">" + (pl ? "Edit" : "Score / date") + "</button>"
       : "";
-    return '<div class="fix"><span class="date">' + esc(fmtDate(m.match_date)) + "</span>" +
+    return '<div class="fix"><span class="date">' + esc(fmtDate(m.match_date)) + (m.stage === "group" && m.grp ? '<br><span class="tag">Group ' + esc(m.grp) + "</span>" : "") + "</span>" +
       '<span class="home' + (h.known ? "" : " tbc") + '">' + esc(h.name) + "</span>" +
       '<span class="mid">' + score + "</span>" +
       '<span class="away' + (a.known ? "" : " tbc") + '">' + esc(a.name) + "</span>" +
       '<span class="act">' + act + "</span></div>";
   }
 
+  function byDate(a, b) {
+    var da = a.match_date || "", db = b.match_date || "";
+    if (da && !db) return -1;
+    if (!da && db) return 1;
+    return String(da).localeCompare(String(db)) || (a.matchday || 0) - (b.matchday || 0) || (a.sort_order || 0) - (b.sort_order || 0);
+  }
   function viewFixtures() {
     var gs = groupsList(), gm = S.matches.filter(function (m) { return m.stage === "group"; });
     var f = gm.filter(function (m) {
       if (S.fGroup !== "all" && m.grp !== S.fGroup) return false;
       if (S.fTeam !== "all" && m.home !== S.fTeam && m.away !== S.fTeam) return false;
       return true;
-    }).sort(L.cmpMatch);
+    }).sort(byDate);
     var teamOpts = '<option value="all">All teams</option>' + S.teams.slice().sort(function (a, b) { return a.name.localeCompare(b.name); })
       .map(function (t) { return '<option value="' + esc(t.id) + '"' + (S.fTeam === t.id ? " selected" : "") + ">" + esc(t.name) + "</option>"; }).join("");
     var out = "<section><h2>Fixtures and results</h2>" +
@@ -128,12 +134,9 @@
         (S.isAdmin ? "Create the group fixtures from the Manage tab." : "The schedule will appear here once the organisers publish it.") + "</div></section>";
     }
     if (!f.length) return out + '<p class="note" style="margin-top:14px">No matches for that filter.</p></section>';
-    var cur = null;
-    f.forEach(function (m) {
-      if (m.matchday !== cur) { cur = m.matchday; out += '<div class="md"><h3 style="margin:0">Matchday ' + esc(m.matchday) + "</h3></div>"; }
-      out += matchRow(m);
-    });
-    return out + "</section>";
+    out += '<div style="margin-top:14px">';
+    f.forEach(function (m) { out += matchRow(m); });
+    return out + "</div></section>";
   }
 
   function viewKnockout() {
