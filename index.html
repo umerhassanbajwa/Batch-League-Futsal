@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Batch 2025 League</title>
+<meta name="description" content="Group tables, fixtures, results and knockout bracket for the Batch 2025 football league.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <svg class="pitch" viewBox="0 0 240 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <rect x="4" y="4" width="232" height="142"/><line x1="120" y1="4" x2="120" y2="146"/>
+      <circle cx="120" cy="75" r="26"/><rect x="4" y="38" width="36" height="74"/><rect x="200" y="38" width="36" height="74"/>
+    </svg>
+    <p class="eyebrow">Football · Group stage into knockout</p>
+    <h1>Batch 2025 League</h1>
+    <p class="sub">Standings, fixtures and results for every team in the batch.</p>
+  </header>
+  <nav class="tabs" id="tabs" role="tablist" aria-label="League sections"></nav>
+  <main id="app"><div class="skel"></div></main>
+  <footer class="foot" id="foot"></footer>
+</div>
+<noscript><p style="padding:16px">This page needs JavaScript to show the league.</p></noscript>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="league.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
