@@ -1,4 +1,4 @@
-# Batch 2025 League
+# Batch Futsal League
 
 A live football league site: group tables, fixtures and results, and a knockout bracket.
 Everyone can view it. Only organisers who sign in can enter scores.
