@@ -88,6 +88,7 @@
         : "") +
       '<input id="e-date" type="date" aria-label="Match date" value="' + v(m.match_date) + '"></div>' +
       '<div class="edit"><button class="btn" type="submit"' + (S.busy ? " disabled" : "") + ">Save result</button>" +
+      '<button class="btn ghost" type="button" data-act="save-date" data-id="' + esc(m.id) + '"' + (S.busy ? " disabled" : "") + '>Save date only</button>' +
       '<button class="btn ghost" type="button" data-act="cancel">Cancel</button>' +
       (L.isPlayed(m) ? '<button class="btn ghost" type="button" data-act="clear" data-id="' + esc(m.id) + '">Clear result</button>' : "") +
       "</div></form>";
@@ -100,7 +101,7 @@
       ? '<span class="score"><b>' + m.hg + "</b><i>–</i><b>" + m.ag + "</b></span>"
       : '<span class="score vs">vs</span>';
     var act = S.isAdmin
-      ? '<button class="link" data-act="edit" data-id="' + esc(m.id) + '"' + (h.known && a.known ? "" : " disabled") + ">" + (pl ? "Edit" : "Enter score") + "</button>"
+      ? '<button class="link" data-act="edit" data-id="' + esc(m.id) + '"' + (h.known && a.known ? "" : " disabled") + ">" + (pl ? "Edit" : "Score / date") + "</button>"
       : "";
     return '<div class="fix"><span class="date">' + esc(fmtDate(m.match_date)) + "</span>" +
       '<span class="home' + (h.known ? "" : " tbc") + '">' + esc(h.name) + "</span>" +
@@ -162,7 +163,7 @@
           '<div class="meta"><span class="tag">' + esc(L.matchLabel(m)) +
           (pl && m.hg === m.ag && Number.isInteger(m.ph) ? " · pens " + m.ph + "–" + m.pa : "") +
           (m.match_date ? " · " + esc(fmtDate(m.match_date)) : "") + "</span>" +
-          (S.isAdmin ? '<button class="link" data-act="edit" data-id="' + esc(m.id) + '"' + (h.known && a.known ? "" : " disabled") + ">" + (pl ? "Edit" : "Enter score") + "</button>" : "") +
+          (S.isAdmin ? '<button class="link" data-act="edit" data-id="' + esc(m.id) + '"' + (h.known && a.known ? "" : " disabled") + ">" + (pl ? "Edit" : "Score / date") + "</button>" : "") +
           "</div></div>";
       });
       out += "</div>";
@@ -343,6 +344,12 @@
     S.editing = null;
     await write(function () { return sb.from("matches").update(upd).eq("id", id); });
   }
+  async function saveDate(id) {
+    var dEl = document.getElementById("e-date");
+    var d = dEl && dEl.value ? dEl.value : null;
+    S.editing = null;
+    await write(function () { return sb.from("matches").update({ match_date: d }).eq("id", id); }, d ? "Date saved." : "Date cleared.");
+  }
   async function clearScore(id) {
     S.editing = null;
     await write(function () { return sb.from("matches").update({ hg: null, ag: null, ph: null, pa: null, played: false }).eq("id", id); });
@@ -385,6 +392,7 @@
     } else if (act === "edit") { S.editing = id; S.notice = ""; render(); }
     else if (act === "cancel") { S.editing = null; render(); }
     else if (act === "clear") clearScore(id);
+    else if (act === "save-date") saveDate(id);
     else if (act === "rm-team") write(function () { return sb.from("teams").delete().eq("id", id); });
     else if (act === "gen-groups") genGroups();
     else if (act === "gen-ko") genKnockout();
