@@ -124,7 +124,8 @@ input[type=number]{width:3.6rem;text-align:center}
   .fix{grid-template-columns:1fr auto 1fr;grid-template-areas:"date date act" "home score away"}
   .fix .date{align-self:end}
   .fix .act{justify-self:end}
-  .pitch{opacity:.6;right:-90px}
+  .masthead{padding-block-start:84px}
+  .pitch{opacity:.8;right:0;top:14px;width:104px;height:65px}
 }
 @media (prefers-reduced-motion:no-preference){
   .tab,.btn,.link{transition:color .15s,background-color .15s,border-color .15s}
